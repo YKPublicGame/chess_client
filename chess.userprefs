@@ -1,0 +1,15 @@
+﻿<Properties StartupItem="Assembly-CSharp.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/network/network.cs">
+    <Files>
+      <File FileName="Assets/Scripts/proto/login.cs" Line="19" Column="34" />
+      <File FileName="Assets/Scripts/protobuf-net/Meta/MetaType.cs" Line="1444" Column="49" />
+      <File FileName="Assets/Scripts/Loading.cs" Line="30" Column="40" />
+      <File FileName="Assets/Scripts/network/network.cs" Line="7" Column="18" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

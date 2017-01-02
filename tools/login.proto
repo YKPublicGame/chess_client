@@ -1,0 +1,7 @@
+package Login;
+
+message Login
+{
+	required string account = 1;
+	required string token = 2;
+}

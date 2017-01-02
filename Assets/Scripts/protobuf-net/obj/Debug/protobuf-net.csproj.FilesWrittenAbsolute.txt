@@ -1,0 +1,6 @@
+/home/yun/code/protobuf-net-master/protobuf-net/obj/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/home/yun/code/protobuf-net-master/protobuf-net/bin/Debug/Licence.txt
+/home/yun/code/protobuf-net-master/protobuf-net/bin/Debug/protobuf-net.dll.mdb
+/home/yun/code/protobuf-net-master/protobuf-net/bin/Debug/protobuf-net.dll
+/home/yun/code/protobuf-net-master/protobuf-net/obj/Debug/protobuf-net.dll
+/home/yun/code/protobuf-net-master/protobuf-net/obj/Debug/protobuf-net.dll.mdb
