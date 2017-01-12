@@ -29,6 +29,19 @@ namespace NetWork{
 		private static Dictionary<String, Type> mProtoTbl = new Dictionary<String, Type>();
 		private List<Msg> msgList = new List<Msg>();
 
+		private static NetClient _netClient;
+
+		private NetClient(){
+		}
+
+		public static NetClient Instance(){
+			if (_netClient == null) {
+				_netClient = new NetClient ();
+			}
+
+			return _netClient;
+		}
+
 		private UInt16 ReadUInt16(byte[] buff, int offset){
 			UInt16 i = (ushort)(buff[offset]*256 + buff[offset + 1]);
 			return i;
@@ -42,6 +55,7 @@ namespace NetWork{
 
 		public bool Connect( string ip, int port){
 			try {
+				Debug.Log ("begin connect " + ip);
 				socket = new Socket(AddressFamily.InterNetwork,SocketType.Stream, ProtocolType.Tcp);
 				socket.BeginConnect(ip, port, new AsyncCallback(ConnectCallBack), null);
 				return true ;
@@ -52,9 +66,13 @@ namespace NetWork{
 		}
 
 		public void ConnectCallBack(IAsyncResult ar){
-			socket.EndConnect(ar);  
-			connected = true; 
-			BeginReceive ();
+			try {
+				socket.EndConnect(ar);  
+				connected = true; 
+				BeginReceive ();
+			}catch(Exception e){
+				Debug.Log (e.ToString());
+			}
 		}
 
 		private void SendCallback(IAsyncResult ar)  
@@ -77,27 +95,22 @@ namespace NetWork{
 		private void ReceiveCallback(IAsyncResult ar){
 			try{
 				int bytesRead = socket.EndReceive(ar);
-				Debug.Log(bytesRead);
 				if (bytesRead <= 0) {
 					BeginReceive ();
 					return;
 				}
 				Debug.Log (String.Format("received msg len={0}", bytesRead));
-				ToHexString(recvBuff.buff);
-
 				recvBuff.cur += bytesRead;
 				int cur = 0;
 
 				while (cur + 2 < recvBuff.cur) {
 					int len = 0;
-					Debug.Log ("slice buff");
 					Msg msg = ReadMsg(recvBuff.buff, cur, ref len);
 					if (msg == null)
 						break;
 					msgList.Add (msg);
 					cur = cur + 2 + len;
 				}
-				Debug.Log ("receive msg end");
 			}
 			catch(Exception e){
 				Debug.Log (e.ToString ());
@@ -111,7 +124,6 @@ namespace NetWork{
 			}
 			UInt16 nlen = ReadUInt16(buff, offset + 2);
 			string name = System.Text.Encoding.ASCII.GetString (buff, offset + 2 + 2, nlen);
-			Debug.Log (String.Format("read msg 1 len={0} name={1}", len, name));
 
 			UInt16 dlen = ReadUInt16(buff, offset + 2 + 2 + nlen);
 			Type type = mProtoTbl [name];
@@ -121,7 +133,6 @@ namespace NetWork{
 			MemoryStream stream = new MemoryStream ();
 			stream.Write (buff, offset + 2 + 2 + nlen + 2, dlen);
 			stream.Position = 0;
-			ToHexString (stream.ToArray ());
 			var body = ProtoBuf.Meta.RuntimeTypeModel.Default.Deserialize(stream, null, type);
 			Msg msg = new Msg();
 			msg.name = name;
@@ -160,9 +171,7 @@ namespace NetWork{
 			WriteUInt16 (protolen, packBuff, 2 + 2 + nlen);
 			Buffer.BlockCopy(protoByte, 0, packBuff, 2 + 2 + nlen + 2, protolen);
 			Write (0, packBuff);
-			ToHexString (packBuff);
-
-			Debug.Log(string.Format("send msg len={0} name len={1} protolen{2} hole len={3}", len, nlen, protolen, packBuff.Length));
+			Debug.Log(string.Format("send msg {0}", name));
 		}
 
 		private void Write( int msgType, byte [] msgContent){
@@ -172,13 +181,12 @@ namespace NetWork{
 		public static void Register()
 		{
 			//通过GetAssemblies 调用appDomain的所有程序集
-			foreach (System.Reflection.Assembly assembly in System.AppDomain.CurrentDomain.GetAssemblies())
+			System.Reflection.Assembly assembly = Assembly.GetExecutingAssembly();
 			{
 				//反射当前程序集的信息
 				foreach(Type type in assembly.GetTypes())
 				{
 					if (!type.IsAbstract && !type.IsInterface && type.GetCustomAttributes (typeof(ProtoBuf.ProtoContractAttribute), false).Length > 0) {
-						Debug.Log (type.Name);
 						mProtoTbl [type.FullName] = type;
 					}
 				}

@@ -1,0 +1,25 @@
+package Room;
+
+message EnterReq
+{
+	required int32 room_id = 1;	
+}
+
+message EnterRsp
+{
+	required int32 err_no = 1;
+}
+
+message LeaveReq
+{
+
+}
+
+message LeaveRsp
+{
+	required int32 err_no = 1;
+}
+
+
+
+

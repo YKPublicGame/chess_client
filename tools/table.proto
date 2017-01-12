@@ -1,0 +1,58 @@
+package Table;
+
+message SitdownReq
+{
+	required int32 tab_id = 1;
+	required int32 index = 2;
+}
+
+message SitdownRsp
+{
+	required int32 err_no = 1;
+}
+
+message StandupReq
+{
+
+}
+
+message StandupRsp
+{
+	required int32 err_no = 1;
+}
+
+message StartReq{
+
+}
+
+message StartConformReq{
+}
+
+message StartNotify{
+	required bool is_red = 1;	// 是否执红
+	required bool is_first = 2;	// 是否先手
+}
+
+message Move
+{
+	required int32 srow = 1;
+	required int32 scol = 2;
+	required int32 drow = 3;
+	required int32 dcol = 4;
+}
+
+message MoveReq
+{
+	required Move move = 1;
+}
+
+message MoveRsp
+{
+	required int32 err_no = 1;
+	optional Move move = 2;
+}
+
+message MoveNotify
+{
+	required Move move = 1;
+}

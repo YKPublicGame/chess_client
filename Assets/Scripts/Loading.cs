@@ -10,7 +10,7 @@ using NetWork;
 
 public class Loading : MonoBehaviour {
 	int tick = 0;
-	NetClient network = new NetClient();
+	NetClient network;
 	UnityEngine.UI.InputField accountInput;
 	UnityEngine.UI.InputField passwdInput;
 	Text errTip;
@@ -18,29 +18,35 @@ public class Loading : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		network.Connect("127.0.0.1", 8888);
-		NetClient.Register ();
+		try{
+			Debug.Log("Start Loading...");
+			network = NetClient.Instance();
+			network.Connect("192.168.1.102", 8888);
+			NetClient.Register ();
 
-		GameObject obj = GameObject.Find ("login_btn");
-		Button loginBtn = obj.GetComponent<Button> ();
-		loginBtn.onClick.AddListener (delegate() {
-			this.onLoginClick ();
-		});
+			GameObject obj = GameObject.Find ("login_btn");
+			Button loginBtn = obj.GetComponent<Button> ();
+			loginBtn.onClick.AddListener (delegate() {
+				this.onLoginClick ();
+			});
 
-		obj = GameObject.Find ("quit_btn");
-		Button quitBtn = obj.GetComponent<Button> ();
-		quitBtn.onClick.AddListener (delegate() {
-			this.onQuitClick ();
-		});
+			obj = GameObject.Find ("quit_btn");
+			Button quitBtn = obj.GetComponent<Button> ();
+			quitBtn.onClick.AddListener (delegate() {
+				this.onQuitClick ();
+			});
 
-		obj = GameObject.Find ("acc_input");
-		accountInput = obj.GetComponent<InputField> ();
+			obj = GameObject.Find ("acc_input");
+			accountInput = obj.GetComponent<InputField> ();
 
-		obj = GameObject.Find ("passwd_input");
-		passwdInput = obj.GetComponent<InputField> ();
+			obj = GameObject.Find ("passwd_input");
+			passwdInput = obj.GetComponent<InputField> ();
 
-		obj = GameObject.Find("err_tip");
-		errTip = obj.GetComponent<Text> ();
+			obj = GameObject.Find ("err_tip");
+			errTip = obj.GetComponent<Text> ();
+		}catch(Exception e){
+			Debug.Log (e.ToString ());
+		}
 	}
 	
 	// Update is called once per frame
@@ -51,33 +57,38 @@ public class Loading : MonoBehaviour {
 		if (msg == null)
 			return;
 
-		if (msg.name == "Login.Login") {
+		if (msg.name == "Login.LoginRsp") {
 			onLogin (msg);
 		}
 	}
 
 	void UpdateTip(){
-		if (errTip.text == "") {
-			return;
+		try{
+	//		if (errTip.text == "") {
+	//			return;
+	//		}
+	//		errTipCount += 1;
+	//		if (errTipCount < 120) {
+	//			return;
+	//		}
+		//
+	//		errTip.text = "";
+	//		errTipCount = 0;
 		}
-		errTipCount += 1;
-		if (errTipCount < 120) {
-			return;
+		catch(Exception e){
+			Debug.Log (e.ToString ());
 		}
-
-		errTip.text = "";
-		errTipCount = 0;
 	}
 
 	void ShowTip(String info){
 		errTip.text = info;
 		errTipCount = 0;
+		Debug.Log (info);
 	}
 
 	void onLogin(Msg msg){
-		Login.Login login = (Login.Login)msg.body;
+		Login.LoginRsp login = (Login.LoginRsp)msg.body;
 		Debug.Log ("onLogin " + login.account + " and " + login.token);
-		Debug.Log (login.account);
 		UnityEngine.SceneManagement.SceneManager.LoadScene ("playing");
 	}
 
@@ -92,11 +103,11 @@ public class Loading : MonoBehaviour {
 			return;
 		}
 
-		Login.Login lo = new Login.Login ();
+		Login.LoginReq lo = new Login.LoginReq ();
 		lo.account = accountInput.text;
 		lo.token = passwdInput.text;
 
-		network.WriteMsg ("Login.Login", lo);
+		network.WriteMsg ("Login.LoginReq", lo);
 	}
 
 	void onQuitClick(){

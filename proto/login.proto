@@ -1,6 +1,12 @@
 package Login;
 
-message Login
+message LoginReq
+{
+	required string account = 1;
+	required string token = 2;
+}
+
+message LoginRsp
 {
 	required string account = 1;
 	required string token = 2;
