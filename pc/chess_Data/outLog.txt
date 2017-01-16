@@ -1,5 +1,0 @@
-﻿chenj_freedom~~~~~
-Start Loading...
-begin connect 192.168.1.100
-send msg Login.LoginReq
-onLogin a and 111
