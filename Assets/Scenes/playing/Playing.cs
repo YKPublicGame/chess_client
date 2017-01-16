@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using NetWork;
+using Room;
 
 public class Playing : MonoBehaviour {
 	public Camera camera;
@@ -109,12 +110,10 @@ public class Playing : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		Debug.Log ("playing is starting...");
 		init ();
 		loadAllChess();
-		Login.Ready msg = new Login.Ready ();
 		network = NetClient.Instance ();
-		network.WriteMsg("Login.Ready", msg);
-
 	}
 
 	void OnMouseDown(){
@@ -145,6 +144,36 @@ public class Playing : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+		NetWork.Msg msg = network.PeekMsg ();
+		if (msg == null)
+			return;
+
+		if (msg.name == "Room.RoomListRsp") {
+			onRoomList (msg);
+		}else if(msg.name == "Room.EnterRsp"){
+			onEnterRoom (msg);
+		}else if(msg.name == "Table.SitdownRsp"){
+		}
+	}
+
+	void onRoomList(NetWork.Msg msg){
+		Room.EnterReq req = new Room.EnterReq ();
+		req.room_id = 1;
+
+		network.WriteMsg ("Room.EnterReq", req);
+	}
+
+	void onEnterRoom(NetWork.Msg msg){
+		Debug.Log ("enter room rsp");
+
+		Table.SitdownReq req = new Table.SitdownReq ();
+		req.tab_id = 1;
+		req.tab_id = 2;
+		network.WriteMsg ("Table.SitdownReq", req);
+	}
+
+	void onSitDown(NetWork.Msg msg){
 		
 	}
+
 }

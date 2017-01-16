@@ -311,11 +311,7 @@ namespace ProtoBuf.Serializers
             else if (useConstructor)
             {
                 if (!hasConstructor) TypeModel.ThrowCannotCreateInstance(constructType);
-                obj = Activator.CreateInstance(constructType
-#if !(CF || SILVERLIGHT || WINRT || PORTABLE || NETSTANDARD1_3 || NETSTANDARD1_4)
-                    , nonPublic: true
-#endif
-                    );
+                obj = Activator.CreateInstance(constructType);
             }
             else
             {

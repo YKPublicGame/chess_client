@@ -10,6 +10,64 @@
 // Generated from: room.proto
 namespace Room
 {
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"RoomInfo")]
+  public partial class RoomInfo : global::ProtoBuf.IExtensible
+  {
+    public RoomInfo() {}
+    
+    private int _id;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int id
+    {
+      get { return _id; }
+      set { _id = value; }
+    }
+    private string _game;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"game", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public string game
+    {
+      get { return _game; }
+      set { _game = value; }
+    }
+    private int _service;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"service", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int service
+    {
+      get { return _service; }
+      set { _service = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"RoomListReq")]
+  public partial class RoomListReq : global::ProtoBuf.IExtensible
+  {
+    public RoomListReq() {}
+    
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"RoomListRsp")]
+  public partial class RoomListRsp : global::ProtoBuf.IExtensible
+  {
+    public RoomListRsp() {}
+    
+    private readonly global::System.Collections.Generic.List<Room.RoomInfo> _list = new global::System.Collections.Generic.List<Room.RoomInfo>();
+    [global::ProtoBuf.ProtoMember(1, Name=@"list", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<Room.RoomInfo> list
+    {
+      get { return _list; }
+    }
+  
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
   [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"EnterReq")]
   public partial class EnterReq : global::ProtoBuf.IExtensible
   {

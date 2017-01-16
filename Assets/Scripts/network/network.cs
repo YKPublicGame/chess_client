@@ -85,7 +85,7 @@ namespace NetWork{
 
 		public void BeginReceive(){
 			try{
-				socket.BeginReceive(recvBuff.buff, 0, RecvBuff.size, 0, new AsyncCallback(ReceiveCallback), socket);
+				socket.BeginReceive(recvBuff.buff, recvBuff.cur, RecvBuff.size - recvBuff.cur, 0, new AsyncCallback(ReceiveCallback), socket);
 			}
 			catch(Exception e) {
 				Debug.Log (e.ToString ());
@@ -99,7 +99,8 @@ namespace NetWork{
 					BeginReceive ();
 					return;
 				}
-				Debug.Log (String.Format("received msg len={0}", bytesRead));
+				Debug.Log(String.Format("recv {0}",bytesRead));
+					
 				recvBuff.cur += bytesRead;
 				int cur = 0;
 
@@ -109,35 +110,48 @@ namespace NetWork{
 					if (msg == null)
 						break;
 					msgList.Add (msg);
-					cur = cur + 2 + len;
+					cur = cur + len;
 				}
+				Debug.Log(string.Format("{0},{1}",recvBuff.cur, cur));
+				if(cur > 0){
+					Buffer.BlockCopy(recvBuff.buff, cur, recvBuff.buff, 0, recvBuff.cur - cur);
+					recvBuff.cur = recvBuff.cur - cur;
+				}
+
 			}
 			catch(Exception e){
 				Debug.Log (e.ToString ());
 			}
+			BeginReceive ();
 		}
 
 		private Msg ReadMsg(byte[] buff, int offset, ref int len){
-			len = ReadUInt16(buff, offset);
-			if (offset + len + 2 > recvBuff.cur) {
+			try{
+				len = ReadUInt16(buff, offset) + 2;
+				if (offset + len > recvBuff.cur) {
+					return null;
+				}
+				UInt16 nlen = ReadUInt16(buff, offset + 2);
+				string name = System.Text.Encoding.ASCII.GetString (buff, offset + 2 + 2, nlen);
+				Debug.Log (String.Format("received msg {0} offset={1}, len={2}", name, offset, len-2));
+
+				UInt16 dlen = ReadUInt16(buff, offset + 2 + 2 + nlen);
+				Type type = mProtoTbl [name];
+				if (type == null) {
+					return new Msg(); 
+				}
+				MemoryStream stream = new MemoryStream ();
+				stream.Write (buff, offset + 2 + 2 + nlen + 2, dlen);
+				stream.Position = 0;
+				var body = ProtoBuf.Meta.RuntimeTypeModel.Default.Deserialize(stream, null, type);
+				Msg msg = new Msg();
+				msg.name = name;
+				msg.body = body;
+				return msg;
+			}catch(Exception e){
+				Debug.Log (e.ToString ());
 				return null;
 			}
-			UInt16 nlen = ReadUInt16(buff, offset + 2);
-			string name = System.Text.Encoding.ASCII.GetString (buff, offset + 2 + 2, nlen);
-
-			UInt16 dlen = ReadUInt16(buff, offset + 2 + 2 + nlen);
-			Type type = mProtoTbl [name];
-			if (type == null) {
-				return new Msg(); 
-			}
-			MemoryStream stream = new MemoryStream ();
-			stream.Write (buff, offset + 2 + 2 + nlen + 2, dlen);
-			stream.Position = 0;
-			var body = ProtoBuf.Meta.RuntimeTypeModel.Default.Deserialize(stream, null, type);
-			Msg msg = new Msg();
-			msg.name = name;
-			msg.body = body;
-			return msg;
 		}
 
 		public Msg PeekMsg(){

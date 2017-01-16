@@ -1,5 +1,6 @@
-﻿chenj_freedom~~~~~
+﻿log inited...
+2.6.5 (tarball)
 Start Loading...
-begin connect 192.168.1.102
+begin connect 192.168.1.100
 send msg Login.LoginReq
 onLogin a and 111

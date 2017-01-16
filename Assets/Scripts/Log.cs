@@ -2,7 +2,9 @@
 using System.Collections;  
 using System.Collections.Generic;  
 using System.IO;  
-using System.Text;  
+using System.Text; 
+using System;
+using System.Reflection;
 
 public class Log : MonoBehaviour {  
 	static List<string> mLines = new List<string>();  
@@ -21,7 +23,15 @@ public class Log : MonoBehaviour {
 		//转载的原文中是用Application.RegisterLogCallback(HandleLog);但是这个方法在unity5.0版本已经废弃不用了  
 		Application.logMessageReceived += HandleLog;  
 		//一个输出  
-		Debug.Log("chenj_freedom~~~~~");  
+		Debug.Log("log inited...");  
+		Type type = Type.GetType("Mono.Runtime");
+		if (type != null)
+		{
+			MethodInfo info = type.GetMethod("GetDisplayName", BindingFlags.NonPublic | BindingFlags.Static);
+
+			if (info != null)
+				Debug.Log(info.Invoke(null, null));
+		}
 	}  
 
 	void Update()  
@@ -82,7 +92,7 @@ public class Log : MonoBehaviour {
 		GUI.color = Color.red;  
 		for (int i = 0, imax = mLines.Count; i < imax; ++i)  
 		{  
-			GUILayout.Label(mLines[i]);  
+		//	GUILayout.Label(mLines[i]);  
 		}  
 	}  
 }  

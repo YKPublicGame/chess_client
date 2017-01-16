@@ -1,7 +1,5 @@
 ﻿chenj_freedom~~~~~
-Start...
-begin connect 192.168.1.102
-00 1A 00 0E 4C 6F 67 69 6E 2E 4C 6F 67 69 6E 52 65 71 00 08 0A 02 61 61 12 02 62 62 
-send msg len=26 name len=14 protolen8 hole len=28
-onLogin aa and 111
-aa
+Start Loading...
+begin connect 192.168.1.100
+send msg Login.LoginReq
+onLogin a and 111

@@ -21,7 +21,7 @@ public class Loading : MonoBehaviour {
 		try{
 			Debug.Log("Start Loading...");
 			network = NetClient.Instance();
-			network.Connect("192.168.1.102", 8888);
+			network.Connect("192.168.1.100", 8888);
 			NetClient.Register ();
 
 			GameObject obj = GameObject.Find ("login_btn");
@@ -89,7 +89,11 @@ public class Loading : MonoBehaviour {
 	void onLogin(Msg msg){
 		Login.LoginRsp login = (Login.LoginRsp)msg.body;
 		Debug.Log ("onLogin " + login.account + " and " + login.token);
-		UnityEngine.SceneManagement.SceneManager.LoadScene ("playing");
+		try{
+			UnityEngine.SceneManagement.SceneManager.LoadScene ("hall");
+		}catch(Exception e){
+			Debug.Log (e.ToString ());
+		}
 	}
 
 	public void onLoginClick(){

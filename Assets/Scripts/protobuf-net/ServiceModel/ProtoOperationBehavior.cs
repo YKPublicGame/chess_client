@@ -21,7 +21,7 @@ namespace ProtoBuf.ServiceModel
         {
             get { return model; }
             set {
-                if (value == null) throw new ArgumentNullException(nameof(value));
+				if (value == null) throw new ArgumentNullException(value.GetType().Name);
                 model = value;
             }
 

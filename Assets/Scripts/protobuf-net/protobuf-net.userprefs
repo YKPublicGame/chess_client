@@ -2,7 +2,8 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Meta/MetaType.cs">
     <Files>
-      <File FileName="Meta/MetaType.cs" Line="1440" Column="37" />
+      <File FileName="Meta/MetaType.cs" Line="718" Column="21" />
+      <File FileName="Serializers/TypeSerializer.cs" Line="301" Column="27" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

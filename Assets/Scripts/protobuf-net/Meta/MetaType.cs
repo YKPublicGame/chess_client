@@ -692,7 +692,7 @@ namespace ProtoBuf.Meta
                     if (!property.CanWrite)
                     {
                         // roslyn automatically implemented properties, in particular for get-only properties: <{Name}>k__BackingField;
-						var backingFieldName = String.Format("<{1}>k__BackingField",property.Name);
+						var backingFieldName = String.Format("<{0}>k__BackingField",property.Name);
                         foreach (var fieldMemeber in foundList)
                         {
                             if ((fieldMemeber as FieldInfo != null) && fieldMemeber.Name == backingFieldName)
@@ -715,7 +715,7 @@ namespace ProtoBuf.Meta
                     { // only care about static things on enums; WinRT has a __value instance field!
                         continue;
                     }
-                    ApplyDefaultBehaviour_AddMembers(model, family, isEnum, partialMembers, dataMemberOffset, inferTagByName, implicitMode, members, member, ref forced, isPublic, isField, ref effectiveType);
+                    ApplyDefaultBehaviour_AddMembers(model, family, isEnum, partialMembers, dataMemberOffset, inferTagByName, implicitMode, members, member, ref forced, isPublic, isField, ref effectiveType, null);
                 } else if ((method = member as MethodInfo) != null)
                 {
                     if (isEnum) continue;
@@ -765,7 +765,7 @@ namespace ProtoBuf.Meta
             }
         }
 
-        private static void ApplyDefaultBehaviour_AddMembers(TypeModel model, AttributeFamily family, bool isEnum, BasicList partialMembers, int dataMemberOffset, bool inferTagByName, ImplicitFields implicitMode, BasicList members, MemberInfo member, ref bool forced, bool isPublic, bool isField, ref Type effectiveType, MemberInfo backingMember = null)
+        private static void ApplyDefaultBehaviour_AddMembers(TypeModel model, AttributeFamily family, bool isEnum, BasicList partialMembers, int dataMemberOffset, bool inferTagByName, ImplicitFields implicitMode, BasicList members, MemberInfo member, ref bool forced, bool isPublic, bool isField, ref Type effectiveType, MemberInfo backingMember)
         {
             switch (implicitMode)
             {
@@ -950,7 +950,7 @@ namespace ProtoBuf.Meta
             return (value & required) == required;
         }
         
-        private static ProtoMemberAttribute NormalizeProtoMember(TypeModel model, MemberInfo member, AttributeFamily family, bool forced, bool isEnum, BasicList partialMembers, int dataMemberOffset, bool inferByTagName, MemberInfo backingMember = null)
+        private static ProtoMemberAttribute NormalizeProtoMember(TypeModel model, MemberInfo member, AttributeFamily family, bool forced, bool isEnum, BasicList partialMembers, int dataMemberOffset, bool inferByTagName, MemberInfo backingMember)
         {
             if (member == null || (family == AttributeFamily.None && !isEnum)) return null; // nix
             int fieldNumber = int.MinValue, minAcceptFieldNumber = inferByTagName ? -1 : 1;
@@ -1437,11 +1437,10 @@ namespace ProtoBuf.Meta
             ResolveListTypes(model, miType, ref itemType, ref defaultType);
 
             MemberInfo backingField = null;
-			var mi_temp = mi as PropertyInfo;
-			if (mi_temp != null && mi_temp.CanWrite == false)
+			if ((mi as PropertyInfo) != null && (mi as PropertyInfo).CanWrite == false)
             {
-				var temp_name = ((PropertyInfo)mi).Name;
-				var backingMembers = type.GetMember(string.Format("<{1}>k__BackingField", temp_name), Helpers.IsEnum(type) ? BindingFlags.Static | BindingFlags.Public : BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+				string strtmp = String.Format("<{0}>k__BackingField",((PropertyInfo)mi).Name);
+					var backingMembers = type.GetMember(strtmp, Helpers.IsEnum(type) ? BindingFlags.Static | BindingFlags.Public : BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
                 if (backingMembers!= null && backingMembers.Length == 1 && (backingMembers[0] as FieldInfo) != null)
                     backingField = backingMembers[0];
             }
