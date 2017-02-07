@@ -10,34 +10,20 @@
 // Generated from: table.proto
 namespace Table
 {
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"SitdownReq")]
-  public partial class SitdownReq : global::ProtoBuf.IExtensible
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"MatchReq")]
+  public partial class MatchReq : global::ProtoBuf.IExtensible
   {
-    public SitdownReq() {}
+    public MatchReq() {}
     
-    private int _tab_id;
-    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"tab_id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int tab_id
-    {
-      get { return _tab_id; }
-      set { _tab_id = value; }
-    }
-    private int _index;
-    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"index", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int index
-    {
-      get { return _index; }
-      set { _index = value; }
-    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"SitdownRsp")]
-  public partial class SitdownRsp : global::ProtoBuf.IExtensible
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"MatchRsp")]
+  public partial class MatchRsp : global::ProtoBuf.IExtensible
   {
-    public SitdownRsp() {}
+    public MatchRsp() {}
     
     private int _err_no;
     [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"err_no", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
@@ -51,47 +37,68 @@ namespace Table
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"StandupReq")]
-  public partial class StandupReq : global::ProtoBuf.IExtensible
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"MatchResult")]
+  public partial class MatchResult : global::ProtoBuf.IExtensible
   {
-    public StandupReq() {}
+    public MatchResult() {}
     
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"StandupRsp")]
-  public partial class StandupRsp : global::ProtoBuf.IExtensible
-  {
-    public StandupRsp() {}
-    
-    private int _err_no;
-    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"err_no", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int err_no
+    private bool _i_am_red;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"i_am_red", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public bool i_am_red
     {
-      get { return _err_no; }
-      set { _err_no = value; }
+      get { return _i_am_red; }
+      set { _i_am_red = value; }
+    }
+    private string _name;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public string name
+    {
+      get { return _name; }
+      set { _name = value; }
+    }
+    private int _lv;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"lv", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int lv
+    {
+      get { return _lv; }
+      set { _lv = value; }
+    }
+    private int _icon;
+    [global::ProtoBuf.ProtoMember(4, IsRequired = true, Name=@"icon", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int icon
+    {
+      get { return _icon; }
+      set { _icon = value; }
     }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"StartReq")]
-  public partial class StartReq : global::ProtoBuf.IExtensible
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ReadyReq")]
+  public partial class ReadyReq : global::ProtoBuf.IExtensible
   {
-    public StartReq() {}
+    public ReadyReq() {}
     
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"StartConformReq")]
-  public partial class StartConformReq : global::ProtoBuf.IExtensible
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ReadyRsp")]
+  public partial class ReadyRsp : global::ProtoBuf.IExtensible
   {
-    public StartConformReq() {}
+    public ReadyRsp() {}
+    
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ReadyNotify")]
+  public partial class ReadyNotify : global::ProtoBuf.IExtensible
+  {
+    public ReadyNotify() {}
     
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)

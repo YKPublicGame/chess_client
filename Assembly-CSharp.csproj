@@ -147,8 +147,9 @@
      <None Include="Assets\outLog.txt" />
      <None Include="Assets\Scripts\protobuf-net\Web\TODO.txt" />
      <None Include="Assets\Scripts\protobuf-net\obj\Debug\protobuf-net.csproj.FilesWrittenAbsolute.txt" />
-     <None Include="Assets\Scripts\protobuf-net\bin\Debug\protobuf-net.xml" />
-     <None Include="Assets\Scripts\protobuf-net\bin\Debug\Licence.txt" />
+ <Reference Include="UnityEngine.Advertisements">
+ <HintPath>/opt/Unity/Editor/Data/UnityExtensions/Unity/Advertisements/UnityEngine.Advertisements.dll</HintPath>
+ </Reference>
  <Reference Include="UnityEngine.UI">
  <HintPath>/opt/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
@@ -163,6 +164,9 @@
  </Reference>
  <Reference Include="UnityEngine.HoloLens">
  <HintPath>/opt/Unity/Editor/Data/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine.Purchasing">
+ <HintPath>/opt/Unity/Editor/Data/UnityExtensions/Unity/UnityPurchasing/UnityEngine.Purchasing.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.VR">
  <HintPath>/opt/Unity/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>

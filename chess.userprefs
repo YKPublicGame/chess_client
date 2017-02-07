@@ -2,12 +2,11 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scenes/playing/Playing.cs">
     <Files>
-      <File FileName="Assets/Scripts/network/network.cs" Line="25" Column="24" />
-      <File FileName="Assets/Scenes/playing/Playing.cs" Line="99" Column="31" />
-      <File FileName="Assets/Scenes/hall/hall.cs" Line="41" Column="2" />
-      <File FileName="Assets/Scripts/Log.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Loading.cs" Line="109" Column="3" />
-      <File FileName="Assets/Scripts/protobuf-net/Meta/TypeModel.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Loading.cs" Line="27" Column="21" />
+      <File FileName="Assets/Scenes/hall/hall.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scenes/playing/Chess.cs" Line="84" Column="29" />
+      <File FileName="Assets/Scenes/playing/Playing.cs" Line="185" Column="2" />
+      <File FileName="Assets/Scripts/network/network.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

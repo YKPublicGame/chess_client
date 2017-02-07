@@ -165,27 +165,31 @@ namespace NetWork{
 		}
 
 		public void WriteMsg<MsgType>(string name, MsgType msg){
-			MemoryStream ms = new MemoryStream ();
-			ProtoBuf.Serializer.Serialize(ms, msg);
-			byte[] protoByte = ms.ToArray();
-			UInt16 protolen = (UInt16)protoByte.Length;
-
-			byte[] nameByte = System.Text.Encoding.ASCII.GetBytes (name);
-			UInt16 nlen = (UInt16)nameByte.Length;
-
-			UInt16 len = (UInt16)(2 + nlen + 2 + protolen); 
-
-			byte[] packBuff = new byte[len + 2];
-
-
-
-			WriteUInt16 (len, packBuff, 0);
-			WriteUInt16 (nlen, packBuff, 2);
-			Buffer.BlockCopy(nameByte, 0, packBuff, 2 + 2, nlen);
-			WriteUInt16 (protolen, packBuff, 2 + 2 + nlen);
-			Buffer.BlockCopy(protoByte, 0, packBuff, 2 + 2 + nlen + 2, protolen);
-			Write (0, packBuff);
 			Debug.Log(string.Format("send msg {0}", name));
+			try{
+				MemoryStream ms = new MemoryStream ();
+				ProtoBuf.Serializer.Serialize(ms, msg);
+				byte[] protoByte = ms.ToArray();
+				UInt16 protolen = (UInt16)protoByte.Length;
+
+				byte[] nameByte = System.Text.Encoding.ASCII.GetBytes (name);
+				UInt16 nlen = (UInt16)nameByte.Length;
+
+				UInt16 len = (UInt16)(2 + nlen + 2 + protolen); 
+
+				byte[] packBuff = new byte[len + 2];
+
+
+
+				WriteUInt16 (len, packBuff, 0);
+				WriteUInt16 (nlen, packBuff, 2);
+				Buffer.BlockCopy(nameByte, 0, packBuff, 2 + 2, nlen);
+				WriteUInt16 (protolen, packBuff, 2 + 2 + nlen);
+				Buffer.BlockCopy(protoByte, 0, packBuff, 2 + 2 + nlen + 2, protolen);
+				Write (0, packBuff);
+			}catch(Exception e) {
+				Debug.Log (e.ToString());
+			}
 		}
 
 		private void Write( int msgType, byte [] msgContent){

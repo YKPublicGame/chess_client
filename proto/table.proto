@@ -1,33 +1,36 @@
 package Table;
 
-message SitdownReq
-{
-	required int32 tab_id = 1;
-	required int32 index = 2;
+message MatchReq{
+
 }
 
-message SitdownRsp
-{
+message MatchRsp{
 	required int32 err_no = 1;
 }
 
-message StandupReq
-{
+// 匹配结果
+message MatchResult{
+	required bool i_am_red = 1;
+	required string name = 2;
+	required int32 lv = 3;
+	required int32 icon = 4;
+}
+
+// 准备
+message ReadyReq{
 
 }
 
-message StandupRsp
-{
-	required int32 err_no = 1;
+// 准备结果
+message ReadyRsp{
 }
 
-message StartReq{
+// 准备通知
+message ReadyNotify{
 
 }
 
-message StartConformReq{
-}
-
+// 游戏开始 
 message StartNotify{
 	required bool is_red = 1;	// 是否执红
 	required bool is_first = 2;	// 是否先手

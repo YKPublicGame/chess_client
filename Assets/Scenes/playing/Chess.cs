@@ -11,25 +11,45 @@ public class Chess{
 	public const int ROOK = 5;    // 车
 	public const int CANNON = 6;  // 炮
 	public const int PAWN = 7;    // 兵
-	public bool red_turn = true;  // 红方走棋
+	public bool my_turn = true;  // 走棋
 	public bool is_red = true;
 
 	// 初始棋盘
 	public int[] board = new Int32[]{
-		15, 14, 13, 12, 11, 12, 13, 14, 15,
-		 0,  0,  0,  0,  0,  0,  0,  0,  0,
-		 0, 16,  0,  0,  0,  0,  0, 16,  0,
-		 17, 0, 17,  0, 17,  0, 17,  0, 17,
-		 0,  0,  0,  0,  0,  0,  0,  0,  0,
-		 0,  0,  0,  0,  0,  0,  0,  0,  0,
-		 7,  0,  7,  0,  7,  0,  7,  0,  7,
-		 0,  6,  0,  0,  0,  0,  0,  6,  0,
-		 0,  0,  0,  0,  0,  0,  0,  0,  0,
-		 5,  4,  3,  2,  1,  2,  3,  4,  5,
+		 5, 4, 3, 2, 1, 2, 3, 4, 5,
+		 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		 0, 6, 0, 0, 0, 0, 0, 6, 0,
+		 7, 0, 7, 0, 7, 0, 7, 0, 7,
+		 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		 7, 0, 7, 0, 7, 0, 7, 0, 7,
+		 0, 6, 0, 0, 0, 0, 0, 6, 0,
+		 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		 5, 4, 3, 2, 1, 2, 3, 4, 5,
 	};
 
+	public void init(bool i_am_red, bool is_my_turn){
+		is_red = i_am_red;
+
+		my_turn = is_my_turn;
+
+		int begin = 0;
+		int end = 9 * 10 / 2;
+		if (!i_am_red) {
+			begin = 45;
+			end = 90;
+		}
+
+		// 执黑方棋子
+		for (int i = begin; i < end; ++i) {
+			if (board [i] > 0) {
+				board [i] = board [i] + 10;
+			}
+		}
+	}
+
 	public bool IsMyTurn(){
-		return red_turn == is_red;
+		return my_turn;
 	}
 
 	public bool IsMyCM(int row, int col){
@@ -61,6 +81,12 @@ public class Chess{
 	}
 
 	public void Move(int sRow, int sCol, int dRow, int dCol){
+		if (IsMyCM (sRow, sCol)) {
+			my_turn = false;
+		} else {
+			my_turn = true;
+		}
+
 		int src = GetCM (sRow, sCol);
 		SetCM (sRow, sCol, 0);
 		SetCM (dRow, dCol, src);

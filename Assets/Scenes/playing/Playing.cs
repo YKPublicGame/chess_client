@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using NetWork;
+using UnityEngine.UI;
 using Room;
+using Table;
 
 public class Playing : MonoBehaviour {
 	public Camera camera;
@@ -46,7 +48,7 @@ public class Playing : MonoBehaviour {
 	NetClient network;
 
 	SortedDictionary<int, GameObject> cm_map = new SortedDictionary<int, GameObject>();
-	LinkedList<GameObject> cms = new LinkedList<GameObject>();
+	SortedDictionary<int, GameObject> cms = new SortedDictionary<int, GameObject>();
 	Chess game = new Chess();
 
 	void init(){
@@ -80,13 +82,45 @@ public class Playing : MonoBehaviour {
 			Vector3 pos = new Vector3 (x + (i % 9) * r, y - i / 9 * r, 0);
 			GameObject cm = GameObject.Instantiate (cm_map[c], pos, Quaternion.identity);
 			cm.transform.SetParent (GameObject.Find ("board").transform);
-			cms.AddLast (cm);
+			cms.Add(i, cm);
 		}
 
 		selected_me_obj = GameObject.Instantiate (selected_me_prefab, new Vector3(0,0,0), Quaternion.identity);
 		selected_me_obj.transform.SetParent (GameObject.Find ("board").transform);
 		selected_other_obj = GameObject.Instantiate (selected_other_prefab, new Vector3(0,0,0), Quaternion.identity);
 		selected_other_obj.transform.SetParent (GameObject.Find ("board").transform);
+	}
+
+	void register_btn(){
+		GameObject obj = GameObject.Find ("match_btn");
+		Button matchBtn = obj.GetComponent<Button> ();
+		matchBtn.onClick.AddListener (delegate() {
+			this.onMatchClick ();
+		});
+
+		obj = GameObject.Find ("ready_btn");
+		Button readyBtn = obj.GetComponent<Button> ();
+		readyBtn.onClick.AddListener (delegate() {
+			this.onReadyClick ();
+		});
+	}
+
+	// Use this for initialization
+	void Start () {
+		Debug.Log ("playing is starting...");
+		init ();
+		register_btn ();
+		network = NetClient.Instance ();
+	}
+
+	void onMatchClick(){
+		Table.MatchReq req = new Table.MatchReq ();
+		network.WriteMsg ("Table.MatchReq", req);
+		Debug.Log ("begin match...");
+	}
+
+	void onReadyClick(){
+		Debug.Log ("ready...");
 	}
 
 	RowCol GetRowCol(Vector3 pos){
@@ -108,20 +142,11 @@ public class Playing : MonoBehaviour {
 		return pos;
 	}
 
-	// Use this for initialization
-	void Start () {
-		Debug.Log ("playing is starting...");
-		init ();
-		loadAllChess();
-		network = NetClient.Instance ();
-	}
-
 	void OnMouseDown(){
 		if (!game.IsMyTurn ())
 			return;
 
 		RowCol rowCol = GetRowCol(Input.mousePosition);
-		Debug.Log (String.Format("{0} {1}", rowCol.row, rowCol.col));
 
 		// 选中的是自己的子
 		if (game.IsMyCM (rowCol.row, rowCol.col)){
@@ -129,6 +154,7 @@ public class Playing : MonoBehaviour {
 			selected_me.col = rowCol.col;
 			selected_me_obj.transform.SetPositionAndRotation (GetPos (rowCol.row, rowCol.col), Quaternion.identity);
 			click_ogg.Play ();
+			Debug.Log (String.Format("select {0} {1}", rowCol.row, rowCol.col));
 			return;
 		}
 
@@ -138,8 +164,23 @@ public class Playing : MonoBehaviour {
 
 		// 选了子，检查能不能走
 		if (!game.CanMove (selected_me.row, selected_me.col, rowCol.row, rowCol.col)) {
-			game.Move (selected_me.row, selected_me.col, rowCol.row, rowCol.col);
+			return;
 		}
+
+		Table.MoveReq req = new Table.MoveReq ();
+		req.move = new Table.Move ();
+		req.move.srow = selected_me.row;
+		req.move.scol = selected_me.col;
+		req.move.drow = rowCol.row;
+		req.move.dcol = rowCol.col;
+
+		if (game.is_red == false) {
+			Debug.Log ("move notify not red");
+			req.move.srow = 11 - req.move.srow;
+			req.move.drow = 11 - req.move.drow;
+		}
+
+		network.WriteMsg ("Table.MoveReq", req);
 	}
 
 	// Update is called once per frame
@@ -148,32 +189,48 @@ public class Playing : MonoBehaviour {
 		if (msg == null)
 			return;
 
-		if (msg.name == "Room.RoomListRsp") {
-			onRoomList (msg);
-		}else if(msg.name == "Room.EnterRsp"){
-			onEnterRoom (msg);
-		}else if(msg.name == "Table.SitdownRsp"){
+		if (msg.name == "Table.MatchRsp") {
+			onMatch (msg);
+		} else if (msg.name == "Table.MatchResult") {
+			onMatchResult (msg);
+		} else if (msg.name == "Table.MoveNotify") {
+			onMoveNotify(msg);
 		}
 	}
 
-	void onRoomList(NetWork.Msg msg){
-		Room.EnterReq req = new Room.EnterReq ();
-		req.room_id = 1;
-
-		network.WriteMsg ("Room.EnterReq", req);
+	void onMatch(NetWork.Msg msg){
+		Debug.Log ("match rsp");
 	}
 
-	void onEnterRoom(NetWork.Msg msg){
-		Debug.Log ("enter room rsp");
+	void onMatchResult(NetWork.Msg msg){
+		Debug.Log ("match result");
+		Table.MatchResult result = (Table.MatchResult)msg.body;
+		Debug.Log (result.i_am_red);
 
-		Table.SitdownReq req = new Table.SitdownReq ();
-		req.tab_id = 1;
-		req.tab_id = 2;
-		network.WriteMsg ("Table.SitdownReq", req);
+		game.init (result.i_am_red, result.i_am_red);
+		loadAllChess ();
 	}
 
-	void onSitDown(NetWork.Msg msg){
-		
-	}
+	void onMoveNotify(NetWork.Msg msg){
+		Table.MoveNotify notify = (Table.MoveNotify)msg.body;
+		Table.Move mv = notify.move;
 
+		if (game.is_red == false) {
+			Debug.Log ("move notify not red");
+			mv.srow = 11 - mv.srow;
+			mv.drow = 11 - mv.drow;
+		}
+
+		int index = (mv.srow - 1) * 9 + mv.scol - 1;
+		// 遍历棋子，找到
+		GameObject cm = cms[index];
+
+		Single r = 0.89f;
+		Vector3 old_pos = cm.transform.position;
+		Vector3 pos = new Vector3 (old_pos.x + (mv.dcol-mv.scol)*r, old_pos.y + (mv.drow-mv.srow) * -r, 0);
+		cm.transform.position = pos;
+		game.Move (mv.srow, mv.scol, mv.drow, mv.dcol);
+
+		selected_me.row = 0;
+	}
 }

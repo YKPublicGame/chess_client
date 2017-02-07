@@ -21,7 +21,7 @@ public class Loading : MonoBehaviour {
 		try{
 			Debug.Log("Start Loading...");
 			network = NetClient.Instance();
-			network.Connect("192.168.1.100", 8888);
+			network.Connect("127.0.0.1", 8888);
 			NetClient.Register ();
 
 			GameObject obj = GameObject.Find ("login_btn");

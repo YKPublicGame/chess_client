@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using NetWork;
 using Room;
+using Login;
 
 public class hall : MonoBehaviour {
 	private NetClient network;
@@ -13,10 +14,6 @@ public class hall : MonoBehaviour {
 		try{
 			Debug.Log("hall is starting...");
 			network = NetClient.Instance ();
-
-			Login.Ready msg = new Login.Ready ();
-			network = NetClient.Instance ();
-			network.WriteMsg("Login.Ready", msg);
 
 			Room.RoomListReq req = new Room.RoomListReq ();
 			network.WriteMsg("Room.RoomListReq", req);

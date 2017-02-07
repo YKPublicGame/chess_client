@@ -1,5 +1,22 @@
 package Room;
 
+message RoomInfo
+{
+	required int32 id = 1;
+	required string game = 2;
+	required int32 service = 3; 
+}
+
+message RoomListReq
+{
+	
+}
+
+message RoomListRsp
+{
+	repeated RoomInfo list = 1;
+}
+
 message EnterReq
 {
 	required int32 room_id = 1;	
@@ -19,7 +36,3 @@ message LeaveRsp
 {
 	required int32 err_no = 1;
 }
-
-
-
-
