@@ -37,11 +37,14 @@ public class Playing : MonoBehaviour {
 		public int row;
 		public int col;
 	};
-	public GameObject selected_me_prefab;
-	public GameObject selected_other_prefab;
+	public GameObject red_selected_prefab;
+	public GameObject black_selected_prefab;
 
-	public GameObject selected_me_obj;
-	public GameObject selected_other_obj;
+	GameObject selected_me_obj;
+	GameObject red_move_src;
+	GameObject red_move_dst;
+	GameObject black_move_src;
+	GameObject black_move_dst;
 	RowCol selected_me = new RowCol(0, 0);
 	RowCol selected_other = new RowCol(0, 0); 
 
@@ -69,7 +72,23 @@ public class Playing : MonoBehaviour {
 		cm_map.Add (10 + Chess.PAWN, bp);
 	}
 
-	void loadAllChess(){
+	GameObject create_selector(GameObject prefab){
+		GameObject o = GameObject.Instantiate (prefab, new Vector3(0,0,0), Quaternion.identity);
+		o.transform.SetParent (GameObject.Find ("board").transform);
+		hide_selector (o);
+		return o;
+	}
+
+	void hide_selector(GameObject o){
+		o.GetComponent<Renderer>().enabled = false;
+	}
+
+	void show_selector(GameObject o, int row, int col){
+		o.transform.SetPositionAndRotation (GetPos (row, col), Quaternion.identity);
+		o.GetComponent<Renderer>().enabled = true;
+	}
+
+	void loadAllChess(bool red){
 		Single r = 0.89f;
 		Single x = 0 - 4 *r;
 		Single y = 4.5f * r;
@@ -85,10 +104,15 @@ public class Playing : MonoBehaviour {
 			cms.Add(i, cm);
 		}
 
-		selected_me_obj = GameObject.Instantiate (selected_me_prefab, new Vector3(0,0,0), Quaternion.identity);
-		selected_me_obj.transform.SetParent (GameObject.Find ("board").transform);
-		selected_other_obj = GameObject.Instantiate (selected_other_prefab, new Vector3(0,0,0), Quaternion.identity);
-		selected_other_obj.transform.SetParent (GameObject.Find ("board").transform);
+		if (red) {
+			selected_me_obj = create_selector (red_selected_prefab);
+		} else {
+			selected_me_obj = create_selector (black_selected_prefab);
+		}
+		red_move_src = create_selector (red_selected_prefab);
+		red_move_dst = create_selector (red_selected_prefab);
+		black_move_src = create_selector (black_selected_prefab);
+		black_move_dst = create_selector (black_selected_prefab);
 	}
 
 	void register_btn(){
@@ -152,7 +176,7 @@ public class Playing : MonoBehaviour {
 		if (game.IsMyCM (rowCol.row, rowCol.col)){
 			selected_me.row = rowCol.row;
 			selected_me.col = rowCol.col;
-			selected_me_obj.transform.SetPositionAndRotation (GetPos (rowCol.row, rowCol.col), Quaternion.identity);
+			show_selector(selected_me_obj, selected_me.row, selected_me.col);
 			click_ogg.Play ();
 			Debug.Log (String.Format("select {0} {1}", rowCol.row, rowCol.col));
 			return;
@@ -175,11 +199,12 @@ public class Playing : MonoBehaviour {
 		req.move.dcol = rowCol.col;
 
 		if (game.is_red == false) {
-			Debug.Log ("move notify not red");
 			req.move.srow = 11 - req.move.srow;
 			req.move.drow = 11 - req.move.drow;
+			req.move.scol = 10 - req.move.scol;
+			req.move.dcol = 10 - req.move.dcol;
 		}
-
+		Debug.Log (String.Format("move src{0} {1} dst{2} {3}", req.move.srow, req.move.scol, req.move.drow, req.move.dcol));
 		network.WriteMsg ("Table.MoveReq", req);
 	}
 
@@ -208,29 +233,49 @@ public class Playing : MonoBehaviour {
 		Debug.Log (result.i_am_red);
 
 		game.init (result.i_am_red, result.i_am_red);
-		loadAllChess ();
+		loadAllChess (result.i_am_red);
 	}
 
 	void onMoveNotify(NetWork.Msg msg){
 		Table.MoveNotify notify = (Table.MoveNotify)msg.body;
 		Table.Move mv = notify.move;
 
+
 		if (game.is_red == false) {
-			Debug.Log ("move notify not red");
 			mv.srow = 11 - mv.srow;
 			mv.drow = 11 - mv.drow;
+			mv.scol = 10 - mv.scol;
+			mv.dcol = 10 - mv.dcol;
+
 		}
 
-		int index = (mv.srow - 1) * 9 + mv.scol - 1;
-		// 遍历棋子，找到
-		GameObject cm = cms[index];
-
 		Single r = 0.89f;
-		Vector3 old_pos = cm.transform.position;
+		int src_index = (mv.srow - 1) * 9 + mv.scol - 1;
+		GameObject src_cm = cms[src_index];
+		Vector3 old_pos = src_cm.transform.position;
 		Vector3 pos = new Vector3 (old_pos.x + (mv.dcol-mv.scol)*r, old_pos.y + (mv.drow-mv.srow) * -r, 0);
-		cm.transform.position = pos;
-		game.Move (mv.srow, mv.scol, mv.drow, mv.dcol);
+		src_cm.transform.position = pos;
 
+		int dst_index = (mv.drow - 1) * 9 + mv.dcol - 1;
+		GameObject dst_cm = cms[dst_index];
+		if (dst_cm != null) {
+			hide_selector (dst_cm);
+		}
+		cms [dst_index] = src_cm;
+		cms [src_index] = null;
+		if (game.IsRedCM(mv.srow, mv.scol)) {
+			show_selector (red_move_src, mv.srow, mv.scol);
+			show_selector (red_move_dst, mv.drow, mv.dcol);
+			hide_selector (black_move_src);
+			hide_selector (black_move_dst);
+		} else {
+			show_selector (black_move_src, mv.srow, mv.scol);
+			show_selector (black_move_dst, mv.drow, mv.dcol);
+			hide_selector (red_move_src);
+			hide_selector (red_move_dst);
+		}
 		selected_me.row = 0;
+		hide_selector (selected_me_obj);
+		game.Move (mv.srow, mv.scol, mv.drow, mv.dcol);
 	}
 }

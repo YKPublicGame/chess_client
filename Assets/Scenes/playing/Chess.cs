@@ -66,6 +66,10 @@ public class Chess{
 		return false;
 	}
 
+	public bool IsRedCM(int row, int col){
+		return GetCM (row, col) < 10;
+	}
+
 	int GetCM(int row, int col){
 		int index = (row - 1) * 9 + col - 1;
 		return board [index];
