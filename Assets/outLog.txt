@@ -1,6 +1,7 @@
 ﻿log inited...
-2.6.5 (tarball)
+2.0 (Visual Studio built mono)
 Start Loading...
-begin connect 127.0.0.1
-send msg Login.LoginReq
-onLogin a and 111
+begin connect 120.79.91.100
+System.NullReferenceException: Object reference not set to an instance of an object
+  at Loading.Start () [0x000a8] in D:\chess\Assets\Scripts\Loading.cs:43 
+NullReferenceException: Object reference not set to an instance of an object
