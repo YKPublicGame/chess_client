@@ -39,7 +39,7 @@ public class Loading : MonoBehaviour {
 			obj = GameObject.Find ("acc_input");
 			accountInput = obj.GetComponent<InputField> ();
 
-			obj = GameObject.Find ("passwd_input");
+			obj = GameObject.Find ("password_input");
 			passwdInput = obj.GetComponent<InputField> ();
 
 			obj = GameObject.Find ("err_tip");

@@ -2,6 +2,5 @@
 2.0 (Visual Studio built mono)
 Start Loading...
 begin connect 120.79.91.100
-System.NullReferenceException: Object reference not set to an instance of an object
-  at Loading.Start () [0x000a8] in D:\chess\Assets\Scripts\Loading.cs:43 
-NullReferenceException: Object reference not set to an instance of an object
+send msg Login.LoginReq
+onLogin hbfghfgh and 111

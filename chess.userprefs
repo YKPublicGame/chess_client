@@ -1,12 +1,10 @@
-﻿<Properties StartupItem="Assembly-CSharp.csproj">
+﻿<Properties StartupItem="chess.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scenes/playing/Playing.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Playing.cs">
     <Files>
-      <File FileName="Assets/Scripts/Loading.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scenes/hall/hall.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scenes/playing/Chess.cs" Line="83" Column="21" />
-      <File FileName="Assets/Scenes/playing/Playing.cs" Line="241" Column="31" />
-      <File FileName="Assets/Scripts/network/network.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Loading.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\network\network.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Playing.cs" Line="123" Column="35" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
